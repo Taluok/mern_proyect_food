@@ -1,36 +1,59 @@
-import React from 'react'
-import logo from '../../public/logo.png'
-import '../components/Navbar.css'
+import React, { useEffect, useState } from 'react';
+import logo from '../../public/logo.png';
+import '../components/Navbar.css';
 import { TbPhoneCall } from "react-icons/tb";
 
 const Navbar = () => {
-    const navItems = <>
-        <li><a href='/'>Home</a></li>
-        <li tabIndex={0}>
-            <details>
-                <summary>Menu</summary>
-                <ul className="p-2">
-                    <li><a>All</a></li>
-                    <li><a>Hamburgers</a></li>
-                    <li><a>Pizza</a></li>
-                </ul>
-            </details>
+    const [isSticky, setStick] = useState(false);
 
-        </li>
-        <li tabIndex={0}>
-            <details>
-                <summary>Services</summary>
-                <ul className="p-2">
-                    <li><a>Online Order</a></li>
-                    <li><a>Table Booking</a></li>
-                    <li><a>Order Tracking</a></li>
-                </ul>
-            </details>
-        </li>
-        <li><a>Offers</a></li></>
+    useEffect(() => {
+        const handleScroll = () => {
+            const offset = window.scrollY;  // Corregido: window.scrollY
+            if (offset > 0) {
+                setStick(true);
+            } else {
+                setStick(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);  // Corregido: removeEventListener
+        };
+
+    }, []);
+
+    const navItems = (
+        <>
+            <li><a href='/'>Home</a></li>
+            <li tabIndex={0}>
+                <details>
+                    <summary>Menu</summary>
+                    <ul className="p-2">
+                        <li><a>All</a></li>
+                        <li><a>Hamburgers</a></li>
+                        <li><a>Pizza</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li tabIndex={0}>
+                <details>
+                    <summary>Services</summary>
+                    <ul className="p-2">
+                        <li><a>Online Order</a></li>
+                        <li><a>Table Booking</a></li>
+                        <li><a>Order Tracking</a></li>
+                    </ul>
+                </details>
+            </li>
+            <li><a>Offers</a></li>
+        </>
+    );
+
     return (
-        <header className='max-w-screen-2x1 container mx-auto'>
-            <div className="navbar xl:px-24">
+        <header className='max-w-screen-2xl container mx-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out'>
+            <div className={`navbar xl:px-24 ${isSticky ? "shadow-md bg-base-100 transition-all duration-300 ease-in-out" : ""}`}>
                 <div className="navbar-start">
                     <div className="dropdown">
                         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -62,7 +85,7 @@ const Navbar = () => {
                         </ul>
                     </div>
                     <a href='/' className='logo'>
-                        <img src={logo} alt="" />
+                        <img src={logo} alt="Logo" />
                     </a>
                 </div>
                 <div className="navbar-center hidden lg:flex">
@@ -71,7 +94,7 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    {/*Search btn*/}
+                    {/* Search button */}
                     <button className="btn btn-ghost btn-circle hidden lg:flex">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +109,7 @@ const Navbar = () => {
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </button>
-                    {/*Cart items*/}
+                    {/* Cart items */}
                     <label tabIndex={0} className="btn btn-ghost btn-circle mr-3 lg:flex hidden items-center justify-center">
                         <div className="indicator">
                             <svg
@@ -104,13 +127,13 @@ const Navbar = () => {
                             <span className="badge badge-sm indicator-item">8</span>
                         </div>
                     </label>
-                    {/*btn*/}
-
+                    {/* Contact button */}
                     <a className="btn bg-orange rounded-full px-6 text-white flex items-center gap-2"><TbPhoneCall />Contact</a>
                 </div>
             </div>
         </header>
-    )
+    );
 }
 
-export default Navbar
+export default Navbar;
+
