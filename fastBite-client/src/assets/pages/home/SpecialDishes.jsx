@@ -5,6 +5,14 @@ import Slider from "react-slick";
 
 const SpecialDishes = () => {
     const [recipes, setRecipes] = useState([])
+    const slider = React.useRef(null)
+
+    useEffect(()=>{
+        fetch("/menu.json").then(res => res.json()). then(data => {
+            const specials = data.filter((item) => item.category === "popular")
+            setRecipes(specials)
+        })
+    },[])
 
     const settings = {
         dots: true,
@@ -49,30 +57,11 @@ const SpecialDishes = () => {
             </div>
 
             <Slider {...settings}>
-                <div>
-                    <h3>1</h3>
-                </div>
-                <div>
-                    <h3>2</h3>
-                </div>
-                <div>
-                    <h3>3</h3>
-                </div>
-                <div>
-                    <h3>4</h3>
-                </div>
-                <div>
-                    <h3>5</h3>
-                </div>
-                <div>
-                    <h3>6</h3>
-                </div>
-                <div>
-                    <h3>7</h3>
-                </div>
-                <div>
-                    <h3>8</h3>
-                </div>
+                {
+                    recipes.map((item, i) => (
+                        
+                    ))
+                }
             </Slider>
 
         </div>

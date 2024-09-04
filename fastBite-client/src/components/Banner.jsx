@@ -49,9 +49,9 @@ const Banner = () => {
                                         name="rating-2"
                                         className="mask mask-star-2 bg-orange-400"
                                         defaultChecked />
-                                    <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
-                                    <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
-                                    <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" />
+                                    <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" readOnly />
+                                    <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" checked readOnly />
+                                    <input type="radio" name="rating-2" className="mask mask-star-2 bg-orange-400" readOnly readOnly/>
                                 </div>
                                 <p className='text-rose-700'>$7.00</p>
                             </div>
