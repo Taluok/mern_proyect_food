@@ -3,6 +3,7 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    './pages/**/*.{html,js}',
   ],
   theme: {
     extend: {
@@ -11,6 +12,7 @@ export default {
         "red" : "FF6868",
         "secondary" : "#555",
         "primaryBG" : "#fcfcfc",
+        "bg-orange-500": "#ff8c18",
 
       },
       fontFamily:{

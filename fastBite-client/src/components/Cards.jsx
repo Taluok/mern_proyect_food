@@ -10,37 +10,40 @@ const Cards = ({ item }) => {
     };
 
     return (
-        <div className="card w-96 bg-base-100 shadow-xl relative">
-            {/* Contenedor para el corazón */}
-            <div 
-                className={`absolute top-2 right-2 p-2 rounded-full cursor-pointer ${isHeartFilled ? "text-rose-500" : "text-white"} bg-orange`} 
+        <div className="card shadow-xl relative mr-5 md:my-5">
+            {/* Corazón para agregar a favoritos */}
+            <div
+                className={`absolute right-2 top-2 p-4 rounded-full cursor-pointer ${isHeartFilled ? "text-rose-500" : "text-white"
+                    } bg-orange`} // Asegúrate que 'bg-green-500' esté en tu configuración de Tailwind
                 onClick={handleHeartClick}
             >
-                <FaHeart className="w-5 h-5 cursor-pointer" />
+                <FaHeart className="w-5 h-5" />
             </div>
 
             {/* Enlace a la página del menú */}
             <Link to={`/menu/${item._id}`}>
                 <figure>
-                    <img 
-                        src={item.image} 
-                        alt={item.name} 
-                        className="w-full h-72 object-cover rounded-t-lg transition-transform transform hover:scale-105 duration-300"
+                    <img
+                        src={item.image}
+                        alt={item.name}
+                        className="hover:scale-105 transition-all duration-300 md:h-72 object-cover w-full"
                     />
                 </figure>
             </Link>
 
             {/* Contenido de la tarjeta */}
-            <div className="card-body p-4">
+            <div className="card-body">
                 <Link to={`/menu/${item._id}`}>
-                    <h2 className="text-xl font-semibold mb-2">{item.name}</h2>
+                    <h2 className="card-title text-lg font-semibold">{item.name}</h2>
                 </Link>
-                <p className="text-gray-600 mb-4">{item.recipe}</p> {/* Se muestra la receta */}
-                <div className="flex justify-between items-center">
-                    <h5 className="text-lg font-semibold">
-                        <span className="text-red-500">$</span> {item.price}
+                <p className="text-gray-500">Description of the item</p>
+                <div className="card-actions justify-between items-center mt-2">
+                    <h5 className="font-semibold text-lg">
+                        <span className="text-sm text-red-500">$ </span>{item.price}
                     </h5>
-                    <button className="btn bg-orange text-white px-4 py-2 rounded-lg">Add to Cart</button>
+                    <button className="btn bg-orange text-white px-4 py-2 rounded-lg hover:bg-green-600">
+                        Add to Cart
+                    </button>
                 </div>
             </div>
         </div>
@@ -48,6 +51,7 @@ const Cards = ({ item }) => {
 };
 
 export default Cards;
+
 
 
 
