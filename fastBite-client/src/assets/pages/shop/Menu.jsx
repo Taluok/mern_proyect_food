@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Cards from '../../../components/Cards';
-import { } from 'react-icons/fa'
+import { FaFilter } from 'react-icons/fa'; // Importar el ícono de filtro
 
 const Menu = () => {
     const [menu, setMenu] = useState([]);
@@ -87,9 +87,9 @@ const Menu = () => {
                         >
                             <option value="all">All Categories</option>
                             <option value="burgers">Burgers</option>
-                            <option value="pizzas">Pizzas</option>
+                            <option value="pizza">Pizza</option>
                             <option value="desserts">Desserts</option>
-                            {/* Añade más categorías según tu menú */}
+                            <option value="drinks">Drinks</option>
                         </select>
 
                         {/* Ordenación */}
@@ -104,21 +104,6 @@ const Menu = () => {
                             <option value="low-to-high">Price: Low to High</option>
                             <option value="high-to-low">Price: High to Low</option>
                         </select>
-                    </div>
-                    <div>
-                        <div className='flex flex-row justify-start md:items-center md:gap-8 gap-4 flex-wrap'>
-                            <button onClick={showAll} className={selectedCategory === "all" ? "active" : ""}>All</button>
-                            <button onClick={() => filterItems("hamburger")} className={selectedCategory === "hamburger" ? "active" : ""}>Hambuger</button>
-                            <button onClick={() => filterItems("pizza")} className={selectedCategory === "pizza" ? "active" : ""}>Pizza</button>
-                            <button onClick={() => filterItems("desserts")} className={selectedCategory === "desserts" ? "active" : ""}>Desserts</button>
-                            <button onClick={() => filterItems("drinks")} className={selectedCategory === "drinks" ? "active" : ""}>Drinks</button>
-                        </div>
-
-                        <div>
-                            <div>
-                                
-                            </div>
-                        </div>
                     </div>
 
                     {/* Renderizado del menú */}
@@ -136,5 +121,6 @@ const Menu = () => {
 };
 
 export default Menu;
+
 
 
