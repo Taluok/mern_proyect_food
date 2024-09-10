@@ -7,6 +7,8 @@ const Menu = () => {
     const [filteredItems, setFilteredItems] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [sortOption, setSortOption] = useState("default");
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
 
     // Cargar datos
     useEffect(() => {
@@ -28,12 +30,14 @@ const Menu = () => {
         const filtered = category === "all" ? menu : menu.filter((item) => item.category === category);
         setFilteredItems(filtered);
         setSelectedCategory(category);
+        setCurrentPage(1); // Reiniciar a la primera página al cambiar la categoría
     };
 
     // Mostrar todo
     const showAll = () => {
         setFilteredItems(menu);
         setSelectedCategory("all");
+        setCurrentPage(1);
     };
 
     // Ordenar elementos
@@ -58,7 +62,15 @@ const Menu = () => {
                 break;
         }
         setFilteredItems(sortedItems);
+        setCurrentPage(1); // Reiniciar a la primera página al cambiar el orden
     };
+
+    // Paginación
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     return (
         <div className='section-container bg-gradient-to-r from-[#fafafa] from-0% to-[#fcfcfc] to-100%'>
@@ -108,12 +120,24 @@ const Menu = () => {
 
                     {/* Renderizado del menú */}
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                        {
-                            filteredItems.map((item) => (
-                                <Cards key={item._id} item={item} />
-                            ))
-                        }
+                        {currentItems.map((item) => (
+                            <Cards key={item._id} item={item} />
+                        ))}
                     </div>
+                </div>
+
+                {/* Sección de paginación */}
+                <div className='flex justify-center mt-6'>
+                    {Array.from({ length: Math.ceil(filteredItems.length / itemsPerPage) }, (_, index) => (
+                        <button
+                            key={index + 1}
+                            onClick={() => paginate(index + 1)}
+                            className={`mx-1 px-3 py-1 rounded-full ${currentPage === index + 1 ? "bg-orange text-white" : "bg-gray-200"}`}
+
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
                 </div>
             </div>
         </div>
@@ -121,6 +145,7 @@ const Menu = () => {
 };
 
 export default Menu;
+
 
 
 
