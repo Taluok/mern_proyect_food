@@ -3,7 +3,7 @@
         "_id": "642c155b2c4774f05c36ee94",
         "name": "Escalope de Veau",
         "recipe": "Pan roasted haddock fillet wrapped in smoked French bacon with pea purée and tomato and chive vinaigrette",
-        "image": "/images/recipes/img1.png",
+        "image": "/images/recipes/img4.png",
         "category": "popular",
         "price": 12.5
     },
@@ -11,7 +11,7 @@
         "_id": "642c155b2c4774f05c36ee9e",
         "name": "Breton Fish Stew",
         "recipe": "Chargrilled chicken with avocado, baby gem lettuce, baby spinach, shallots, French beans, walnuts, croutons and a mustard dressing",
-        "image": "/images/recipes/img2.png",
+        "image": "/images/recipes/img4.png",
         "category": "popular",
         "price": 12.9
     },
@@ -19,7 +19,7 @@
         "_id": "642c155b2c4774f05c36ee96",
         "name": "Fish Parmentier",
         "recipe": "Sautéed breaded veal escalope with watercress, lemon and veal jus.",
-        "image": "/images/recipes/img1.png",
+        "image": "/images/recipes/img4.png",
         "category": "pizza",
         "price": 9.5
     },
@@ -27,7 +27,7 @@
         "_id": "642c155b2c4774f05c36ee97",
         "name": "Haddock",
         "recipe": "Chargrilled fresh tuna steak (served medium rare) on classic Niçoise salad with French beans.",
-        "image": "/images/recipes/img2.png",
+        "image": "/images/recipes/img4.png",
         "category": "popular",
         "price": 14.7
     },
@@ -35,9 +35,44 @@
         "_id": "642c155b2c4774f05c36eea0",
         "name": "Roasted Pork Belly",
         "recipe": "Chargrilled chicken with avocado, baby gem lettuce, baby spinach, shallots, French beans, walnuts, croutons and a mustard dressing",
-        "image": "/images/recipes/img2.png",
-        "category": "popular",
+        "image": "/images/recipes/img4.png",
+        "category": "hamburger",
         "price": 14.5
+    },
+    {
+        "_id": "642c155b2c4774f05c36eea1",
+        "name": "Margherita Pizza",
+        "recipe": "Classic margherita pizza topped with fresh mozzarella, basil, and tomato sauce.",
+        "image": "/images/recipes/img4.png",
+        "category": "pizza",
+        "price": 10.0
+    },
+    {
+        "_id": "642c155b2c4774f05c36eea2",
+        "name": "Drinks",
+        "recipe": "All Drinks",
+        "image": "/images/recipes/img7.png",
+        "category": "drinks",
+        "price": 10.0
+    },
+    {
+        "_id": "642c155b2c4774f05c36eeew",
+        "name": "Nutella Muffin",
+        "recipe": "Dessert Nutella",
+        "image": "/images/recipes/img8.png",
+        "category": "desserts",
+        "price": 10.0
+    },
+    {
+        "_id": "642c155b2c4774f05c36eeew",
+        "name": "IceCream",
+        "recipe": "IceCream",
+        "image": "/images/recipes/img9.png",
+        "category": "desserts",
+        "price": 10.0
     }
+
+    
 ]
+
 
