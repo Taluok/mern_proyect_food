@@ -3,7 +3,16 @@ import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const Cards = ({ item }) => {
+    const {name, image, price, recipe, _id} = item
     const [isHeartFilled, setIsHeartFilled] = useState(false);
+
+    //add to cart btn
+    const handleAddtoCart = (item) => {
+        //console.log("btn is cliecked", item)
+        if(user && user?.email){
+            const cartItem = {menuItemId: _id, name, quantity: 1, image, price, email: user.email}
+        }
+    }
 
     const handleHeartClick = () => {
         setIsHeartFilled(!isHeartFilled);
@@ -41,7 +50,7 @@ const Cards = ({ item }) => {
                     <h5 className="font-semibold text-lg">
                         <span className="text-sm text-red-500">$ </span>{item.price}
                     </h5>
-                    <button className="btn bg-orange text-white px-4 py-2 rounded-lg hover:bg-green-600">
+                    <button className="btn bg-orange text-white px-4 py-2 rounded-lg hover:bg-green-600" onClick={() => handleAddtoCart(item)}>
                         Add to Cart
                     </button>
                 </div>
