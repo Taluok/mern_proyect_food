@@ -44,7 +44,13 @@ async function run() {
             res.send(result)
         })
 
-        
+        //get carts using email
+        app.get('carts', async(req, res) => {
+            const email = req.query.email;
+            const filter = {email: email};
+            const result = await cartCollections.find(filter).toArray();
+            res.send(result)
+        })
 
         // Ping para confirmar una conexión exitosa
         await client.db("admin").command({ ping: 1 });
