@@ -1,11 +1,56 @@
-import React from 'react'
+import React, { useContext } from 'react';
+import useCart from '../../hooks/useCart';
+import { FaTrash } from "react-icons/fa";
+import Swal from 'sweetalert2';
+import { AuthContext } from '../../contexts/AuthProvider';
 
 const CartPage = () => {
+    const [cart, refetch] = useCart();
+    const { user } = useContext(AuthContext);
+
+    // Manejar la eliminación del item
+    const handleDelete = (item) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`http://localhost:6001/carts/${item._id}`, {
+                    method: "DELETE"
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.deletedCount > 0) {
+                        refetch();
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your item has been deleted.",
+                            icon: "success"
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error deleting item:", error);
+                    Swal.fire({
+                        title: "Error!",
+                        text: "There was an issue deleting the item.",
+                        icon: "error"
+                    });
+                });
+            }
+        });
+    };
+
     return (
         <div className="section-container">
             {/* Banner */}
             <div className='py-36 flex flex-col items-center justify-center gap-8'>
-                {/* Texts */}
+                {/* Textos */}
                 <div className='px-4 space-y-7 text-center'>
                     <h2 className='md:text-5xl text-4xl font-bold md:leading-snug leading-snug'>
                         Items Added to the <span className='text-orange'>Cart</span>
@@ -14,14 +59,13 @@ const CartPage = () => {
                         Where Each Plate Weaves a Story of Culinary Mastery & Passionate Craftsmanship
                     </p>
                 </div>
-                {/*table*/}
+
+                {/* Tabla */}
                 <div className="overflow-x-auto">
                     <table className="table">
-                        {/* head */}
+                        {/* Cabecera */}
                         <thead className='bg-orange text-white rounded-sm'>
                             <tr>
-                                <th>
-                                </th>
                                 <th>#</th>
                                 <th>Food</th>
                                 <th>Item Name</th>
@@ -31,151 +75,63 @@ const CartPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {/* row 1 */}
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" className="checkbox" />
-                                    </label>
-                                </th>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
+                            {/* Filas dinámicas del carrito */}
+                            {cart.map((item, index) => (
+                                <tr key={item._id}>
+                                    <td>{index + 1}</td>
+                                    <td>
+                                        <div className="flex items-center gap-3">
+                                            <div className="avatar">
+                                                <div className="mask mask-squircle h-12 w-12">
+                                                    <img src={item.image} alt={item.name} />
+                                                </div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <div className="font-bold">Hart Hagerty</div>
-                                            <div className="text-sm opacity-50">United States</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    Zemlak, Daniel and Leannon
-                                    <br />
-                                    <span className="badge badge-ghost badge-sm">Desktop Support Technician</span>
-                                </td>
-                                <td>Purple</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">details</button>
-                                </th>
-                            </tr>
-                            {/* row 2 */}
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" className="checkbox" />
-                                    </label>
-                                </th>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/3@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold">Brice Swyre</div>
-                                            <div className="text-sm opacity-50">China</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    Carroll Group
-                                    <br />
-                                    <span className="badge badge-ghost badge-sm">Tax Accountant</span>
-                                </td>
-                                <td>Red</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">details</button>
-                                </th>
-                            </tr>
-                            {/* row 3 */}
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" className="checkbox" />
-                                    </label>
-                                </th>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/4@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold">Marjy Ferencz</div>
-                                            <div className="text-sm opacity-50">Russia</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    Rowe-Schoen
-                                    <br />
-                                    <span className="badge badge-ghost badge-sm">Office Assistant I</span>
-                                </td>
-                                <td>Crimson</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">details</button>
-                                </th>
-                            </tr>
-                            {/* row 4 */}
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" className="checkbox" />
-                                    </label>
-                                </th>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div className="avatar">
-                                            <div className="mask mask-squircle h-12 w-12">
-                                                <img
-                                                    src="https://img.daisyui.com/images/profile/demo/5@94.webp"
-                                                    alt="Avatar Tailwind CSS Component" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <div className="font-bold">Yancy Tear</div>
-                                            <div className="text-sm opacity-50">Brazil</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    Wyman-Ledner
-                                    <br />
-                                    <span className="badge badge-ghost badge-sm">Community Outreach Specialist</span>
-                                </td>
-                                <td>Indigo</td>
-                                <th>
-                                    <button className="btn btn-ghost btn-xs">details</button>
-                                </th>
-                            </tr>
+                                    </td>
+                                    <td className='font-medium'>{item.name}</td>
+                                    <td>{item.quantity}</td>
+                                    <td>${item.price.toFixed(2)}</td>
+                                    <td>
+                                        <button 
+                                            className="btn btn-ghost btn-xs text-red" 
+                                            onClick={() => handleDelete(item)}
+                                        >
+                                            Remove
+                                        </button>
+                                        <FaTrash />
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
-                        {/* foot */}
+                        {/* Pie de tabla */}
                         <tfoot>
                             <tr>
                                 <th></th>
-                                <th>Name</th>
-                                <th>Job</th>
-                                <th>Favorite Color</th>
+                                <th>Food</th>
+                                <th>Item Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
                                 <th></th>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
+
+                {/* Detalles del cliente */}
+                {user ? ( // Verifica si 'user' no es null
+                    <div className='md:w-1/2 space-y-3'>
+                        <h3 className='font-medium'>Customer Details</h3>
+                        <p>Name: {user.displayName}</p>
+                        <p>Email: {user.email}</p>
+                        <p>User ID: {user._id}</p> 
+                    </div>
+                ) : (
+                    // Mensaje si no hay usuario autenticado
+                    <p>Please log in to see your customer details.</p>
+                )}
             </div>
         </div>
-    )
+    );
 }
 
 export default CartPage;
-

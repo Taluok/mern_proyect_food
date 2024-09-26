@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'; // Importar Link
 import logo from '../../public/logo.png';
 import '../components/Navbar.css';
 import { FaUser } from 'react-icons/fa';
 import Modal from './Modal';
+import { AuthContext } from '../contexts/AuthProvider';
+import useCart from '../hooks/useCart';
 
 const Navbar = () => {
     const [isSticky, setStick] = useState(false);
+
+    const {user} = useContext(AuthContext);
+    const [cart, refetch] = useCart()
 
     useEffect(() => {
         const handleScroll = () => {
