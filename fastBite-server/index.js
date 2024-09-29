@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Config
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@demo-fastbite-cluster.1mpra.mongodb.net/?retryWrites=true&w=majority&appName=demo-fastBite-cluster`;
 
 const client = new MongoClient(uri, {
@@ -66,6 +66,21 @@ async function run() {
             const filter = {_id: new ObjectId(id)};
             const result = await cartCollections.deleteOne(filter);
             res.send(result)
+        })
+
+        //update cats quantity
+        app.put("/cats/:id", async(req, res) => {
+            const id = req.params.id;
+            const {quantity} = req.body
+            const filter = {_id: new ObjectId(id)};
+            const options = { upsert: true };
+
+            const updateDoc = {
+                $set: {
+                    quantity: parseInt(quantity, 10)
+                }
+            }
+            const result = await cartCollections.updateOne(filter, updateDoc, options)
         })
 
         // Ping para confirmar una conexión exitosa

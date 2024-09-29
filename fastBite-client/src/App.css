@@ -1,25 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'); /* Importa solo los pesos necesarios */
 
-body{
+body {
   font-family: "Poppins", system-ui;
 }
 
-header{
-    z-index:10001 ! important;
+header {
+  z-index: 10001 !important; /* Asegúrate de que este valor es necesario */
 }
 
-.section-container{
+.section-container {
   @apply max-w-screen-2xl container mx-auto xl:px-24 px-4;
 }
 
-.subtitle{
-  @apply text-orange uppercase tracking-wide font-medium text-lg
+.subtitle {
+  @apply text-orange uppercase tracking-wide font-medium text-lg;
 }
 
-.title{
-  @apply text-4xl md:text-5xl font-bold my-2 md:leading-snug leading-snug
+.title {
+  @apply text-4xl md:text-5xl font-bold my-2 md:leading-snug leading-snug;
 }
 
-.heartStar{
-    border-radius: 0px 28px 0px 28px;
+.heartStar {
+  border-radius: 0px 28px 0px 28px;
 }
+
+.footer-title {
+  color: black !important;
+}
+
+.active {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  color: orange;
+}
+
+/* Eliminar las flechas de los inputs numéricos en navegadores WebKit */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+

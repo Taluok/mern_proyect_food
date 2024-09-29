@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import useCart from '../../hooks/useCart';
 import { FaTrash } from "react-icons/fa";
 import Swal from 'sweetalert2';
@@ -7,6 +7,60 @@ import { AuthContext } from '../../contexts/AuthProvider';
 const CartPage = () => {
     const [cart, refetch] = useCart();
     const { user } = useContext(AuthContext);
+
+    // Calcular precio total por item
+    const calculatePrice = (item) => {
+        return item.price * item.quantity;
+    };
+
+    // Función para disminuir la cantidad
+    const handleDecrease = (item) => {
+        if (item.quantity > 1) {  // No permitir cantidades menores a 1
+            fetch(`http://localhost:6001/carts/${item._id}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ quantity: item.quantity - 1 })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        refetch(); // Actualizar carrito tras la petición
+                    } else {
+                        console.error('Error updating quantity:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    };
+
+    //calculo precio total 
+    const cartSubTotal = cart.reduce((total, item) => {
+        return total + calculatePrice(item);
+    },0);
+
+    const orderTotal = cartSubTotal;
+
+    // Función para aumentar la cantidad
+    const handleIncrease = (item) => {
+        fetch(`http://localhost:6001/carts/${item._id}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ quantity: item.quantity + 1 })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    refetch();
+                } else {
+                    console.error('Error updating quantity:', data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    };
 
     // Manejar la eliminación del item
     const handleDelete = (item) => {
@@ -23,25 +77,25 @@ const CartPage = () => {
                 fetch(`http://localhost:6001/carts/${item._id}`, {
                     method: "DELETE"
                 })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.deletedCount > 0) {
-                        refetch();
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.deletedCount > 0) {
+                            refetch();
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your item has been deleted.",
+                                icon: "success"
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error deleting item:", error);
                         Swal.fire({
-                            title: "Deleted!",
-                            text: "Your item has been deleted.",
-                            icon: "success"
+                            title: "Error!",
+                            text: "There was an issue deleting the item.",
+                            icon: "error"
                         });
-                    }
-                })
-                .catch(error => {
-                    console.error("Error deleting item:", error);
-                    Swal.fire({
-                        title: "Error!",
-                        text: "There was an issue deleting the item.",
-                        icon: "error"
                     });
-                });
             }
         });
     };
@@ -89,16 +143,20 @@ const CartPage = () => {
                                         </div>
                                     </td>
                                     <td className='font-medium'>{item.name}</td>
-                                    <td>{item.quantity}</td>
-                                    <td>${item.price.toFixed(2)}</td>
                                     <td>
-                                        <button 
-                                            className="btn btn-ghost btn-xs text-red" 
+                                        <button className='btn btn-xs' onClick={() => handleDecrease(item)}>-</button>
+                                        <input type="number" value={item.quantity}
+                                            readOnly className='w-10 mx-2 text-center overflow-hidden appearance-none' />
+                                        <button className='btn btn-xs' onClick={() => handleIncrease(item)}>+</button>
+                                    </td>
+                                    <td>${calculatePrice(item)}</td>
+                                    <td>
+                                        <button
+                                            className="btn btn-ghost btn-xs text-red"
                                             onClick={() => handleDelete(item)}
                                         >
-                                            Remove
+                                            <FaTrash className="inline mr-1" /> Remove
                                         </button>
-                                        <FaTrash />
                                     </td>
                                 </tr>
                             ))}
@@ -123,15 +181,14 @@ const CartPage = () => {
                         <h3 className='font-medium'>Customer Details</h3>
                         <p>Name: {user.displayName}</p>
                         <p>Email: {user.email}</p>
-                        <p>User ID: {user._id}</p> 
+                        <p>User ID: {user._id}</p>
                     </div>
                 ) : (
-                    // Mensaje si no hay usuario autenticado
                     <p>Please log in to see your customer details.</p>
                 )}
             </div>
         </div>
     );
-}
+};
 
 export default CartPage;
