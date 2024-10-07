@@ -4,6 +4,7 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const port = process.env.PORT || 6001;
 const mongoose = require('mongoose');
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 // Middleware
 app.use(cors());
@@ -36,9 +37,29 @@ app.post('/jwt', async (req, res) => {
 const menuRoutes = require('./api/routes/menuRoutes');
 const cartRoutes = require('./api/routes/cartRoutes');
 const userRoutes = require('./api/routes/userRoutes');
+const paymentRoutes = require('./api/routes/paymentRoutes');
 app.use('/menu', menuRoutes);
 app.use('/carts', cartRoutes);
 app.use('/users', userRoutes);
+app.use('/payments', paymentRoutes)
+
+//stripe payment routes
+app.post("/create-payment-intent", async (req,res) => {
+    const { items } = req.body;
+    const amount = price*100
+
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "usd",
+
+        payment_method_types : ["card"],
+    })
+
+    res.send({
+        clientSecret: paymentIntent.client_secret,
+    })
+})
+
 
 app.get("/", (req, res) => {
     res.send("Hello FastBite Client Server!");
