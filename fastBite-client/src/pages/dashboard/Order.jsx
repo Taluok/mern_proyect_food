@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query'; 
 import { Link } from 'react-router-dom'; 
 import { FaTrash } from 'react-icons/fa'; 
@@ -17,24 +17,20 @@ const Order = () => {
                     authorization: `Bearer ${token}`
                 }
             });
+            if (!res.ok) {
+                throw new Error('Network response was not ok');
+            }
             return res.json();
         }
     });
 
-    
-    const cart = orders; 
     const calculateTotalPrice = (item) => item.quantity * item.price; // Función para calcular precio total
-    const orderTotal = cart.reduce((total, item) => total + calculateTotalPrice(item), 0); // Total del carrito
-
-    // Manejo de aumento y disminución de cantidad (a definir según tu lógica)
-    const handleDecrease = (item) => { /* Lógica para disminuir */ };
-    const handleIncrease = (item) => { /* Lógica para aumentar */ };
-    const handleDelete = (item) => { /* Lógica para eliminar */ };
+    const orderTotal = orders.reduce((total, item) => total + calculateTotalPrice(item), 0); // Total del carrito
 
     return (
         <div className='max-w-screen-2xl container mx-auto xl:px-24 px-4'>
             {/* Banner */}
-            <div className='bg-gradient-to-r from-0% from-[#fafafa] to-[#fcfcfc] to-100%'>
+            <div className='bg-gradient-to-r from-[#fafafa] to-[#fcfcfc]'>
                 <div className='py-28 flex flex-col items-center justify-center'>
                     {/* Content */}
                     <div className='text-center px-4 space-y-7'>
@@ -46,7 +42,7 @@ const Order = () => {
             </div>
 
             {/* Tabla de pedidos */}
-            {cart.length > 0 ? (
+            {orders.length > 0 ? (
                 <div>
                     <div className="overflow-x-auto">
                         <table className="table">
@@ -62,16 +58,13 @@ const Order = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {cart.map((item, index) => (
+                                {orders.map((item, index) => (
                                     <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>
                                             <div className="avatar">
                                                 <div className="mask mask-squircle w-12 h-12">
-                                                    <img
-                                                        src={item.image}
-                                                        alt="Food Item"
-                                                    />
+                                                    <img src={item.image} alt={item.name} />
                                                 </div>
                                             </div>
                                         </td>
@@ -86,7 +79,7 @@ const Order = () => {
                                             <input
                                                 type="number"
                                                 value={item.quantity}
-                                                onChange={() => console.log(item.quantity)}
+                                                onChange={() => console.log(item.quantity)} // Implementa la lógica aquí si es necesario
                                                 className="w-10 mx-2 text-center overflow-hidden appearance-none"
                                             />
                                             <button
@@ -110,29 +103,40 @@ const Order = () => {
                             </tbody>
                         </table>
                     </div>
+
+                    {/* Detalles del Cliente y Compra */}
                     <hr />
                     <div className="flex flex-col md:flex-row justify-between items-start my-12 gap-8">
+                        {/* Detalles del Cliente */}
                         <div className="md:w-1/2 space-y-3">
                             <h3 className="text-lg font-semibold">Customer Details</h3>
                             <p>Name: {user?.displayName || "None"}</p>
                             <p>Email: {user?.email}</p>
-                            <p>User_id: <span className="text-sm">{user?.uid}</span></p>
+                            <p>User ID: <span className="text-sm">{user?.uid}</span></p>
                         </div>
+
+                        {/* Detalles de la Compra */}
                         <div className="md:w-1/2 space-y-3">
                             <h3 className="text-lg font-semibold">Shopping Details</h3>
-                            <p>Total Items: {cart.length}</p>
-                            <p>Total Price: <span id="total-price">${orderTotal.toFixed(2)}</span></p>
+                            <p>Total Items: {orders.length}</p> 
+                            {/* Total Price */}
+                            <p>Total Price: 
+                                <span id="total-price">${orderTotal.toFixed(2)}</span></p> 
+                            {/* Enlace a Checkout */}
                             <Link to='/process-checkout'>
                                 <button className="btn btn-md bg-green text-white px-8 py-1 mt-5">
                                     Proceed to Checkout
                                 </button>
                             </Link>
+
                         </div>
                     </div>
-                </div>
+
+                </div> 
             ) : (
+                // Mensaje si no hay órdenes
                 <div className="text-center mt-20">
-                    <p>Cart is empty. Please add products.</p>
+                    <p>Your order list is empty. Please add products.</p>
                     <Link to="/menu">
                         <button className="btn bg-green text-white mt-3">Back to Menu</button>
                     </Link>

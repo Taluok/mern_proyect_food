@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'; 
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { FaPaypal } from "react-icons/fa";
-import { useAuth } from '../contexts/AuthProvider'; 
+import { useAuth } from '../../contexts/AuthProvider'; 
 import useAxiosSecure from '../../hooks/useAxiosSecure'; 
 import { useNavigate } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ const CheckoutForm = ({ price, cart }) => {
     const elements = useElements();
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const [cardError, setCardError] = useState('');
     const [clientSecret, setClientSecret] = useState("");
@@ -55,10 +55,11 @@ const CheckoutForm = ({ price, cart }) => {
         if (paymentMethodError) {
             console.log('[error]', paymentMethodError);
             setCardError(paymentMethodError.message); 
-        } else {
-            setCardError("Payment method created successfully!");
-            console.log('[paymentMethod]', paymentMethod);
-        }
+            return; // Salir si hay un error
+        } 
+
+        setCardError("Payment method created successfully!");
+        console.log('[paymentMethod]', paymentMethod);
 
         // Confirmar el pago
         const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
@@ -74,20 +75,31 @@ const CheckoutForm = ({ price, cart }) => {
         if (confirmError) {
             console.log('[confirmError]', confirmError);
             setCardError(confirmError.message); 
-        } else {
-            setCardError("Payment successful!");
-            console.log('[paymentIntent]', paymentIntent);
-
+            return; // Salir si hay un error
         }
 
-        console.log(paymentInfo)
-        //send information to backend
+        setCardError("Payment successful!");
+        console.log('[paymentIntent]', paymentIntent);
+
+        // Enviar información al backend
+        const paymentInfo = {
+            amount: price,
+            transactionId: paymentIntent.id,
+            email: user?.email,
+            cartItems: cart,
+            createdAt: new Date().toISOString(),
+        };
+
         axiosSecure.post('/payments', paymentInfo)
-        .then( res => {
-            console.log(res.data)
-            alert("Payment successfull")
-            navigate('/order')
-        })
+            .then(res => {
+                console.log(res.data);
+                alert("Payment successful");
+                navigate('/order'); // Redirigir al usuario a la página de órdenes
+            })
+            .catch(error => {
+                console.error("Error sending payment info:", error);
+                alert("There was an issue processing your payment.");
+            });
     };
 
     return (
@@ -127,7 +139,7 @@ const CheckoutForm = ({ price, cart }) => {
                     </button>
                 </form>
 
-                {cardError && <p className="text-red italic text-xs">{cardError}</p>} {/* Mostrar error si existe */}
+                {cardError && <p className="text-red italic text-xs">{cardError}</p>} 
 
                 {/* PayPal Button */}
                 <div className='mt-5 text-center'>
