@@ -1,73 +1,37 @@
-import React, { createContext, useEffect, useState } from 'react'
-import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
-import app from "../firebase/firebase.config"
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { auth } from "../firebase/firebase.config"; 
 
-
+// Crear el contexto de autenticación
 export const AuthContext = createContext();
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
 
+// Hook para usar el contexto
+export const useAuth = () => {
+    return useContext(AuthContext);
+};
 
-const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+// Componente proveedor de autenticación
+export const AuthProvider = ({ children }) => {
+    const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // create an account
-    const createUser = (email, password) => {
-        setLoading(true);
-        return createUserWithEmailAndPassword(auth, email, password)
-    }
-
-    // signup with gmail
-    const signUpWithGmail = () => {
-        setLoading(true);
-        return signInWithPopup(auth, googleProvider)
-    }
-
-    // login using email & password
-    const login = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password);
-    }
-
-    // logout 
-    const logOut = () => {
-        return signOut(auth);
-    }
-
-    // update profile
-    const updateUserProfile = (name, photoURL) => {
-        return updateProfile(auth.currentUser, {
-            displayName: name, photoURL: photoURL
-        })
-    }
-
-    // check signed-in user
+    // Efecto para verificar el estado de autenticación
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            // console.log(currentUser);
-            setUser(currentUser);
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            setCurrentUser(user);
             setLoading(false);
         });
 
-        return () => {
-            return unsubscribe();
-        }
-    }, [])
+        return unsubscribe; // Limpia el suscriptor al desmontar el componente
+    }, []);
 
-    const authInfo = {
-        user,
-        createUser,
-        signUpWithGmail,
-        login,
-        logOut,
-        updateUserProfile,
-        loading
-    }
+    const value = {
+        currentUser,
+        // Puedes agregar más funciones aquí, como login, logout, etc.
+    };
+
     return (
-        <AuthContext.Provider value={authInfo}>
-            {children}
+        <AuthContext.Provider value={value}>
+            {!loading && children} {/* Renderiza los hijos solo si no está cargando */}
         </AuthContext.Provider>
-    )
-}
-
-export default AuthProvider
+    );
+};

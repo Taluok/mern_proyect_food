@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'; 
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { FaPaypal } from "react-icons/fa";
-import { useAuth } from '../../contexts/AuthProvider'; 
+import useAuth from '../../hooks/useAuth'; // Asegúrate de que esta ruta sea correcta
 import useAxiosSecure from '../../hooks/useAxiosSecure'; 
 import { useNavigate } from 'react-router-dom';
 
 const CheckoutForm = ({ price, cart }) => {
     const stripe = useStripe();
     const elements = useElements();
-    const { user } = useAuth();
+    const { user } = useAuth(); // Aquí usas el hook
     const axiosSecure = useAxiosSecure();
     const navigate = useNavigate();
 
@@ -47,7 +47,7 @@ const CheckoutForm = ({ price, cart }) => {
         }
 
         // Crear Payment Method
-        const { error: paymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
+        const { error: paymentMethodError } = await stripe.createPaymentMethod({
             type: 'card',
             card,
         });
@@ -59,7 +59,6 @@ const CheckoutForm = ({ price, cart }) => {
         } 
 
         setCardError("Payment method created successfully!");
-        console.log('[paymentMethod]', paymentMethod);
 
         // Confirmar el pago
         const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
@@ -79,7 +78,6 @@ const CheckoutForm = ({ price, cart }) => {
         }
 
         setCardError("Payment successful!");
-        console.log('[paymentIntent]', paymentIntent);
 
         // Enviar información al backend
         const paymentInfo = {
